@@ -1,6 +1,14 @@
 import { http, HttpResponse } from "msw";
 import { fixtures, type DB } from "@/data/fixtures";
 
+async function parseJson<T>(request: Request, fallback: T): Promise<T> {
+  try {
+    return (await request.json()) as T;
+  } catch {
+    return fallback;
+  }
+}
+
 const LS_KEY = "mockdb";
 
 function loadDB(): DB {
@@ -28,7 +36,7 @@ export const handlers = [
   }),
   http.post("/api/save_user_data", async ({ request }) => {
     const db = loadDB();
-    const data = await request.json();
+    const data = await parseJson<Record<string, any>>(request, {});
     db.users[0] = { ...db.users[0], ...data };
     saveDB(db);
     return HttpResponse.json({ ok: true });
@@ -50,13 +58,13 @@ export const handlers = [
     return HttpResponse.json({ properties: db.properties });
   }),
   http.post("/api/fetch_property", async ({ request }) => {
-    const { id } = await request.json();
+    const { id } = await parseJson<{ id: string }>(request, { id: "" });
     const db = loadDB();
     const property = db.properties.find((p) => p.id === id);
     return HttpResponse.json({ property });
   }),
   http.post("/api/save_property", async ({ request }) => {
-    const input = await request.json();
+    const input = await parseJson<Record<string, any>>(request, {});
     const db = loadDB();
     const idx = db.properties.findIndex((p) => p.id === input.id);
     if (idx >= 0) db.properties[idx] = { ...db.properties[idx], ...input };
@@ -65,7 +73,7 @@ export const handlers = [
     return HttpResponse.json({ ok: true });
   }),
   http.post("/api/fetch_team_portfolio_paginated", async ({ request }) => {
-    const { page = 1, pageSize = 10 } = await request.json().catch(() => ({}));
+    const { page = 1, pageSize = 10 } = await parseJson<{ page?: number; pageSize?: number }>(request, {} as any);
     const db = loadDB();
     const start = (page - 1) * pageSize;
     const items = db.properties.slice(start, start + pageSize);
@@ -77,12 +85,12 @@ export const handlers = [
   }),
   http.post("/api/save_collection", async ({ request }) => {
     const db = loadDB();
-    const payload = await request.json();
+    const payload = await parseJson<{ action: "create" | "add" | "remove"; name?: string; collection_id?: string; property_id?: string }>(request, { action: "create" });
     if (payload.action === "create") {
       const id = uid("col");
-      db.collections.push({ id, team_id: db.teams[0].id, name: payload.name });
+      db.collections.push({ id, team_id: db.teams[0].id, name: payload.name! });
     } else if (payload.action === "add") {
-      db.collection_items.push({ collection_id: payload.collection_id, property_id: payload.property_id });
+      db.collection_items.push({ collection_id: payload.collection_id!, property_id: payload.property_id! });
     } else if (payload.action === "remove") {
       db.collection_items = db.collection_items.filter((ci) => !(ci.collection_id === payload.collection_id && ci.property_id === payload.property_id));
     }
@@ -92,7 +100,7 @@ export const handlers = [
 
   // Leads
   http.post("/api/get_leads", async ({ request }) => {
-    const { page = 1, pageSize = 10 } = await request.json().catch(() => ({}));
+    const { page = 1, pageSize = 10 } = await parseJson<{ page?: number; pageSize?: number }>(request, {} as any);
     const db = loadDB();
     const start = (page - 1) * pageSize;
     const items = db.leads.slice(start, start + pageSize);
@@ -114,7 +122,7 @@ export const handlers = [
   }),
   http.post("/api/save_subplot_bounds", async ({ request }) => {
     const db = loadDB();
-    const { polygon } = await request.json();
+    const { polygon } = await parseJson<{ polygon: any }>(request, { polygon: null });
     db.subplots.push({ id: uid("subplot"), team_id: db.teams[0].id, polygon });
     saveDB(db);
     return HttpResponse.json({ ok: true });
@@ -163,7 +171,7 @@ export const handlers = [
     return HttpResponse.json({ jobs: db.sync_jobs });
   }),
   http.post("/api/run_sync", async ({ request }) => {
-    const { provider } = await request.json();
+    const { provider } = await parseJson<{ provider: string }>(request, { provider: "" });
     const db = loadDB();
     db.sync_jobs.unshift({ id: uid("job"), team_id: db.teams[0].id, provider, status: "running", started_at: new Date().toISOString(), finished_at: null });
     saveDB(db);
