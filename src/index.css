@@ -7,7 +7,7 @@ All colors MUST be HSL.
 */
 
 @layer base {
-  :root {
+:root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -17,8 +17,10 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Brand: warm red to match iRealty-style CTA */
+    --primary: 0 72% 48%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 0 85% 60%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -38,21 +40,20 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
+    /* Sidebar tokens */
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Gradients & shadows */
+    --gradient-auth-from: 204 100% 97%;
+    --gradient-auth-to: 204 80% 92%;
+    --shadow-elegant: 0 10px 30px -12px hsl(var(--primary) / 0.25);
   }
 
   .dark {
@@ -101,5 +102,7 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    background-image: linear-gradient(180deg, hsl(var(--gradient-auth-from)), hsl(var(--gradient-auth-to)));
+    background-attachment: fixed;
   }
 }

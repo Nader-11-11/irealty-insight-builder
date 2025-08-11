@@ -1,0 +1,5 @@
+[
+  { "district": "Eixample", "bbox": [2.139, 41.375, 2.177, 41.404], "centroid": [2.16, 41.39] },
+  { "district": "Gràcia",  "bbox": [2.146, 41.402, 2.167, 41.42],  "centroid": [2.156, 41.411] },
+  { "district": "Sants-Montjuïc", "bbox": [2.13, 41.36, 2.16, 41.385], "centroid": [2.145, 41.372] }
+]

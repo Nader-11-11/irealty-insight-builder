@@ -1,0 +1,20 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Eixample" },
+      "geometry": { "type": "Polygon", "coordinates": [[[2.139,41.375],[2.177,41.375],[2.177,41.404],[2.139,41.404],[2.139,41.375]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Gràcia" },
+      "geometry": { "type": "Polygon", "coordinates": [[[2.146,41.402],[2.167,41.402],[2.167,41.42],[2.146,41.42],[2.146,41.402]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Sants-Montjuïc" },
+      "geometry": { "type": "Polygon", "coordinates": [[[2.13,41.36],[2.16,41.36],[2.16,41.385],[2.13,41.385],[2.13,41.36]]] }
+    }
+  ]
+}
